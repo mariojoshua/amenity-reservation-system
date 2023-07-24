@@ -1,4 +1,4 @@
-package com.amenity_reservation_system.domain;
+package com.amenity_reservation_system.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
