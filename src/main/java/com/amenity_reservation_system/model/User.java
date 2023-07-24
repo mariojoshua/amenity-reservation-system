@@ -3,13 +3,17 @@ package com.amenity_reservation_system.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 import lombok.Getter;
@@ -40,8 +44,8 @@ public class User {
     )
     private Long id;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Reservation> userReservations;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Reservation> userReservations = new HashSet<>();
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -51,5 +55,15 @@ public class User {
     @Column(nullable = false)
     private OffsetDateTime lastUpdated;
 
+    @PrePersist
+    public void prePersist() {
+        dateCreated = OffsetDateTime.now();
+        lastUpdated = dateCreated;
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        lastUpdated = OffsetDateTime.now();
+    }
 
 }
